@@ -60,6 +60,9 @@ uint8_t pattern[9]={
 // Current pattern index
 uint8_t current_pattern = 0;
 
+// Timer delay in milliseconds
+uint32_t current_delay = 1000;
+
 
 /* USER CODE END PV */
 
