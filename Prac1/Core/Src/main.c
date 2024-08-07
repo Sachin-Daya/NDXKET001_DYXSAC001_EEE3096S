@@ -57,6 +57,9 @@ uint8_t pattern[9]={
 	    0b00000000
 };
 
+// Current pattern index
+uint8_t current_pattern = 0;
+
 
 /* USER CODE END PV */
 
