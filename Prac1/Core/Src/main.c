@@ -110,6 +110,13 @@ int main(void)
 
   // TODO: Start timer TIM16
 
+  // Start timer TIM16 in interrupt mode
+  if (HAL_TIM_Base_Start_IT(&htim16) != HAL_OK)
+  {
+    // Starting Error
+    Error_Handler();
+  }
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
