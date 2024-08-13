@@ -111,12 +111,8 @@ int main(void)
   // TODO: Start timer TIM16
 
   // Start timer TIM16 in interrupt mode
-  if (HAL_TIM_Base_Start_IT(&htim16) != HAL_OK)
-  {
-    // Starting Error
-    Error_Handler();
-  }
-
+  HAL_TIM_Base_Start_IT(&htim16);
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,40 +124,32 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
     // TODO: Check pushbuttons to change timer delay
-    
-	  // Check pushbuttons to change timer delay
-	  button0_state = HAL_GPIO_ReadPin(Button0_GPIO_Port, Button0_Pin);
-	  button1_state = HAL_GPIO_ReadPin(Button1_GPIO_Port, Button1_Pin);
-	  button2_state = HAL_GPIO_ReadPin(Button2_GPIO_Port, Button2_Pin);
-	  button3_state = HAL_GPIO_ReadPin(Button3_GPIO_Port, Button3_Pin);
-
-	  if (button0_state == 0)
-		{
-			current_delay = 500;
-			__HAL_TIM_SET_AUTORELOAD(&htim16, (current_delay*8)-1);
-		}
-
-
-	  // If Button 1 is pressed, set delay to 2 seconds (2000 ms)
-	  if (button1_state == 0)
-	  {
-	      current_delay = 2000;
-	      __HAL_TIM_SET_AUTORELOAD(&htim16, (current_delay * 8) - 1);
+    // when button 0 is pressed delay should be 0.5s
+    if (HAL_GPIO_ReadPin(Button0_GPIO_Port, Button0_Pin) == GPIO_PIN_RESET) {
+		  current_delay  = 500;
+	    TIM16->ARR = current_delay  - 1;
+	  }
+          // when button 1 is pressed delay should be 2s
+	  if (HAL_GPIO_ReadPin(Button1_GPIO_Port, Button1_Pin) == GPIO_PIN_RESET) {
+		  current_delay  = 2000;
+	    TIM16->ARR = current_delay  - 1;
+	  }
+         // when button 2 is pressed delay should be 1s
+	  if (HAL_GPIO_ReadPin(Button2_GPIO_Port, Button2_Pin) == GPIO_PIN_RESET) {
+	    current_delay = 1000;
+	    TIM16->ARR = current_delay - 1;
 	  }
 
-	  // If Button 2 is pressed, set delay to 1 second (1000 ms)
-	  if (button2_state == 0)
-	  {
-	      current_delay = 1000;
-	      __HAL_TIM_SET_AUTORELOAD(&htim16, (current_delay * 8) - 1);
+	  // Reset LED sequence and timer period when button 3 is pressed
+	  if (HAL_GPIO_ReadPin(Button3_GPIO_Port, Button3_Pin) == GPIO_PIN_RESET) {
+		  current_delay  = 1000;
+	    TIM16->ARR = current_delay  - 1;
+	    current_pattern = 0;
+	    apply_led_pattern(patterns[current_pattern]);
 	  }
 
-	  // If Button 3 is pressed, reset to pattern 1
-	  if (button3_state == 0)
-	  {
-	      current_pattern = 0;
-	  }
-  }
+
+   }
   /* USER CODE END 3 */
 }
 
