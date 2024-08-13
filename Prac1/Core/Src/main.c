@@ -381,18 +381,21 @@ void TIM16_IRQHandler(void)
 
 	// TODO: Change LED pattern
 	// print something
-         set_led_pattern(patterns[current_pattern]);
-	 current_pattern = (current_pattern + 1) % (sizeof(patterns) / sizeof(patterns[0]));
+         current_pattern = (current_pattern + 1) % (sizeof(patterns) / sizeof(patterns[0]));
+	    apply_led_pattern(patterns[current_pattern]);
 	}
 
-	void set_led_pattern(uint8_t pattern)
-	{
-	    for (int i = 0; i < 8; i++)
-	    {
-	        HAL_GPIO_WritePin(GPIOB, (1 << i), (pattern & (1 << i)) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-	    }
-
- }
+	void apply_led_pattern(uint8_t pattern) {
+	    for (int i = 0; i < 8; i++) {
+	        if (pattern & (1 << i)) {
+		    // Set the corresponding GPIO pin high if the bit is set
+	            HAL_GPIO_WritePin(GPIOB, (1 << i), GPIO_PIN_SET);
+	        } else {
+		    // Set the corresponding GPIO pin low if the bit is not set
+	            HAL_GPIO_WritePin(GPIOB, (1 << i), GPIO_PIN_RESET);
+	        }
+	  }
+	}
 
 /* USER CODE END 4 */
 
